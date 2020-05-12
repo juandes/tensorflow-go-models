@@ -1,5 +1,5 @@
 start-server:
-	go run cmd/main.go
+	go run examples/mobilenet-service/main.go
 
 tags:
 	saved_model_cli show --dir static/models/ssd_mobilenet_v1_coco_2018_01_28 --all 

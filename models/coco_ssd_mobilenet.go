@@ -2,19 +2,26 @@ package models
 
 import (
 	"fmt"
-	"strings"
+	"path"
+	"path/filepath"
+	"runtime"
 
 	"github.com/juandes/tensorflow-go-models/responses"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
+
+var (
+	_, b, _, _ = runtime.Caller(0)
+	basepath   = filepath.Dir(b)
+)
+
+const modelPath = "../static/models/ssd_mobilenet_v1_coco_2018_01_28"
 
 // Coco is a MobileNet V1 model trained on the COCO dataset.
 type Coco struct {
 	model  *tf.SavedModel
 	labels []string
 }
-
-const path = "static/models/ssd_mobilenet_v1_coco_2018_01_28/"
 
 // NewCoco returns a Coco object
 func NewCoco() *Coco {
@@ -23,12 +30,14 @@ func NewCoco() *Coco {
 
 // Load loads the ssd_mobilenet_v1_coco_2018_01_28 SavedModel.
 func (c *Coco) Load() error {
-	model, err := tf.LoadSavedModel(path, []string{"serve"}, nil)
+	fmt.Println(path.Join(basepath, "..", modelPath))
+	model, err := tf.LoadSavedModel(path.Join(basepath, modelPath, "/"), []string{"serve"}, nil)
 	if err != nil {
 		return fmt.Errorf("Error loading model: %v", err)
 	}
 	c.model = model
-	c.labels, err = readLabels(strings.Join([]string{path, "labels.txt"}, ""))
+
+	c.labels, err = readLabels(path.Join(basepath, modelPath, "labels.txt"))
 	if err != nil {
 		return fmt.Errorf("Error loading labels file: %v", err)
 	}
