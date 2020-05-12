@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/juandes/tensorflow-models/responses"
+	"github.com/juandes/tensorflow-go-models/responses"
 	tf "github.com/tensorflow/tensorflow/tensorflow/go"
 )
 

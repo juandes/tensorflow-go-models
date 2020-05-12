@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/gorilla/mux"
-	"github.com/juandes/tensorflow-models/models"
+	"github.com/juandes/tensorflow-go-models/models"
 )
 
 var model *models.Coco
