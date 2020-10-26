@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/juandes/tensorflow-go-models/models"
@@ -30,11 +31,12 @@ func main() {
 		Methods("POST").
 		HandlerFunc(predict)
 
-	fmt.Printf("Listeing on port %d", port)
+	fmt.Printf("Listening on port %d\n", port)
 	http.ListenAndServe(fmt.Sprintf(":%s", strconv.Itoa(port)), router)
 }
 
 func predict(w http.ResponseWriter, r *http.Request) {
+	defer elapsed()()
 	file, _, err := r.FormFile("data")
 	if err != nil {
 		http.Error(w, "Unable to get file", http.StatusInternalServerError)
@@ -50,4 +52,11 @@ func predict(w http.ResponseWriter, r *http.Request) {
 	outcome := model.Predict(fileBytes)
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(outcome)
+}
+
+func elapsed() func() {
+	start := time.Now()
+	return func() {
+		fmt.Printf("Elapsed time %v\n", time.Since(start))
+	}
 }
