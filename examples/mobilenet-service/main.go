@@ -12,6 +12,8 @@ import (
 	"github.com/juandes/tensorflow-go-models/models"
 )
 
+// After starting the service, you can test it with curl:
+// curl -F "data=@static/images/person.jpg" http://localhost:8080/predict
 var model *models.Coco
 
 const port = 8080
